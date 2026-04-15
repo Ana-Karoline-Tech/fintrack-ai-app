@@ -15,7 +15,7 @@ const navItems = [
   { href: "/transactions", label: "Transações", icon: iconTransacoes },
 ] as const;
 
-const Sidebar = () => {
+export const Sidebar = () => {
   const pathname = usePathname();
 
   return (
@@ -87,5 +87,3 @@ const Sidebar = () => {
     </aside>
   );
 };
-
-export default Sidebar;
