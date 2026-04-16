@@ -23,7 +23,7 @@ export default function BalanceCard({
 }: BalanceCardProps) {
   return (
     <section
-      className="relative flex h-[254px] w-full flex-col justify-between self-stretch overflow-hidden rounded-[24px] bg-[#9333EA] p-8 font-(family-name:--font-inter) shadow-[0px_8px_10px_-6px_rgba(168,85,247,0.2),0px_20px_25px_-5px_rgba(168,85,247,0.2)]"
+      className="relative flex h-[254px] w-full flex-col justify-between self-stretch overflow-hidden rounded-[24px] bg-[#9333EA] p-8 font-sans shadow-[0px_8px_10px_-6px_rgba(168,85,247,0.2),0px_20px_25px_-5px_rgba(168,85,247,0.2)]"
       aria-label="Resumo do saldo"
     >
       <div
