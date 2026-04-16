@@ -20,12 +20,12 @@ export const Sidebar = () => {
 
   return (
     <aside
-      className="flex w-[255px] shrink-0 flex-col self-stretch border-r border-[var(--color-card-dark)] bg-[var(--color-background-dark-header)] font-[family-name:var(--font-inter)]"
+      className="flex w-[255px] shrink-0 flex-col self-stretch border-r border-(--color-card-dark) bg-(--color-background-dark-header) font-sans"
       aria-label="Menu lateral"
     >
       {/* Header: logo do Figma + FinTrack (Inter 700, 20px) */}
       <div className="flex w-[255px] items-center gap-3 px-6 py-6">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-primary)]">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--color-primary)">
           <Image
             src={logoPng}
             alt=""
@@ -34,7 +34,7 @@ export const Sidebar = () => {
             className="h-[22px] w-[22px] object-contain"
           />
         </div>
-        <span className="text-left text-xl font-bold leading-[1.4] tracking-[-0.025em] text-[var(--color-text-primary)]">
+        <span className="text-left text-xl font-bold leading-[1.4] tracking-[-0.025em] text-(--color-text-primary)">
           FinTrack
         </span>
       </div>
@@ -52,10 +52,10 @@ export const Sidebar = () => {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 self-stretch rounded-xl px-4 py-3 text-base font-medium leading-[1.5] ${
+              className={`flex items-center gap-3 self-stretch rounded-xl px-4 py-3 text-base font-medium leading-normal ${
                 isActive
-                  ? "bg-[var(--color-primary)] text-white"
-                  : "text-[var(--color-text-secondary)] hover:bg-[var(--color-card-dark)]/50 hover:text-[var(--color-text-primary)]"
+                  ? "bg-(--color-primary) text-white"
+                  : "text-(--color-text-secondary) hover:bg-(--color-card-dark)/50 hover:text-(--color-text-primary)"
               }`}
             >
               <Image
@@ -72,8 +72,8 @@ export const Sidebar = () => {
       </nav>
 
       {/* Divider + Sair (ícone do Figma; LogoutButton fornece a ação) */}
-      <div className="w-[255px] border-t border-[var(--color-card-dark)] px-6 py-6">
-        <div className="flex items-center gap-3 self-stretch rounded-xl px-4 py-3 [&_button]:w-full [&_button]:justify-start [&_button]:rounded-xl [&_button]:px-0 [&_button]:py-0 [&_button]:text-[var(--color-text-secondary)] [&_button]:hover:text-[var(--color-text-primary)] [&_button]:flex [&_button]:items-center [&_button]:gap-3 [&_button_img]:hidden">
+      <div className="w-[255px] border-t border-(--color-card-dark) px-6 py-6">
+        <div className="flex items-center gap-3 self-stretch rounded-xl px-4 py-3 [&_button]:w-full [&_button]:justify-start [&_button]:rounded-xl [&_button]:px-0 [&_button]:py-0 [&_button]:text-(--color-text-secondary) [&_button]:hover:text-(--color-text-primary) [&_button]:flex [&_button]:items-center [&_button]:gap-3 [&_button_img]:hidden">
           <Image
             src={iconSair}
             alt=""
