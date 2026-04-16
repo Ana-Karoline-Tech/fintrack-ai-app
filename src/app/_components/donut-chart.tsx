@@ -33,9 +33,13 @@ export const DonutChart = ({ data, centerLabel }: DonutChartProps) => {
             data={data}
             dataKey="value"
             nameKey="name"
+            cx="50%"
+            cy="50%"
             innerRadius={64}
             outerRadius={92}
             paddingAngle={2}
+            startAngle={90}
+            endAngle={-270}
             stroke="none"
           >
             {data.map((entry) => (
@@ -47,7 +51,7 @@ export const DonutChart = ({ data, centerLabel }: DonutChartProps) => {
 
       <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-[10px] font-bold uppercase tracking-widest text-[#64748B]">
-          {centerLabel}
+          {centerLabel.toUpperCase()}
         </span>
         <strong className="text-[30px] font-black leading-9 text-[#F1F5F9]">{centerPercent}%</strong>
       </div>
