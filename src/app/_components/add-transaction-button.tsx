@@ -2,12 +2,23 @@
 
 import { useState } from 'react'
 import {
+    DialogClose,
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from '@/src/components/ui/dialog'
+import { Input } from '@/src/components/ui/input'
+import { Label } from '@/src/components/ui/label'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/src/components/ui/select'
+import { X } from 'lucide-react'
 
 /** Ícone “+” exportado do Figma (Button > Container, node 2:204) */
 function IconAddFigma() {
@@ -44,22 +55,113 @@ export const AddTransactionButton = () => {
                 </button>
             </DialogTrigger>
 
-            <DialogContent className="border-[#1E293B] bg-[#161B26] text-white">
-                <DialogHeader>
-                    <DialogTitle className="text-xl font-bold">
-                        Adicionar Transação
+            <DialogContent
+                showCloseButton={false}
+                className="w-[420px] max-w-[calc(100%-2rem)] gap-0 overflow-hidden rounded-[24px] border border-[#334155] bg-[#1E293B] p-0 font-sans text-white ring-0 max-h-[90vh]"
+            >
+                <DialogHeader className="flex-row items-center justify-between border-b border-[#334155] px-6 py-5">
+                    <DialogTitle className="text-[18px] font-semibold leading-7 tracking-normal text-[#F1F5F9]">
+                        Nova transação
                     </DialogTitle>
+                    <DialogClose asChild>
+                        <button
+                            type="button"
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-[#94A3B8] transition hover:bg-[#334155] hover:text-[#F1F5F9]"
+                            aria-label="Fechar modal"
+                        >
+                            <X size={20} />
+                        </button>
+                    </DialogClose>
                 </DialogHeader>
 
-                <div className="flex flex-col gap-4 py-6 text-slate-400">
-                    <p className="text-sm">
-                        Preencha as informações da sua nova transação abaixo
-                        para manter seu controle financeiro atualizado.
-                    </p>
-                    <div className="flex h-32 w-full items-center justify-center rounded-xl border border-dashed border-[#1E293B] bg-[#0F111A] italic text-slate-600">
-                        Área do Formulário
+                <form className="space-y-4 overflow-y-auto px-6 py-5">
+                    <div className="space-y-2">
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Título</Label>
+                        <Input
+                            placeholder="Ex: Almoço, Freela..."
+                            className="h-[44px] rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#F1F5F9] placeholder:text-[#64748B] focus-visible:border-[#64748B] focus-visible:ring-0"
+                        />
                     </div>
-                </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Valor (R$)</Label>
+                        <Input
+                            placeholder="0,00"
+                            inputMode="decimal"
+                            className="h-[44px] rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#F1F5F9] placeholder:text-[#64748B] focus-visible:border-[#64748B] focus-visible:ring-0"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Tipo</Label>
+                        <Select>
+                            <SelectTrigger className="h-[44px] w-full rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#CBD5E1] [&_svg]:text-[#94A3B8]">
+                                <SelectValue placeholder="Selecione o tipo" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="income">Receita</SelectItem>
+                                <SelectItem value="expense">Despesa</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Categoria</Label>
+                        <Select>
+                            <SelectTrigger className="h-[44px] w-full rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#CBD5E1] [&_svg]:text-[#94A3B8]">
+                                <SelectValue placeholder="Selecione a categoria" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="food">Alimentação</SelectItem>
+                                <SelectItem value="work">Trabalho</SelectItem>
+                                <SelectItem value="entertainment">Entretenimento</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">
+                            Método de pagamento
+                        </Label>
+                        <Select>
+                            <SelectTrigger className="h-[44px] w-full rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#CBD5E1] [&_svg]:text-[#94A3B8]">
+                                <SelectValue placeholder="Selecione o método" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="pix">PIX</SelectItem>
+                                <SelectItem value="debit">Débito</SelectItem>
+                                <SelectItem value="credit">Crédito</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Data</Label>
+                        <Input
+                            placeholder="__/__/__"
+                            className="h-[44px] rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#F1F5F9] placeholder:text-[#64748B] focus-visible:border-[#64748B] focus-visible:ring-0"
+                        />
+                    </div>
+
+                    <div className="pt-2">
+                        <div className="flex items-center gap-4">
+                            <DialogClose asChild>
+                                <button
+                                    type="button"
+                                    className="h-[44px] flex-1 rounded-xl border border-[#334155] text-[16px] font-semibold text-[#CBD5E1] transition hover:bg-[#334155]/40"
+                                >
+                                    Cancelar
+                                </button>
+                            </DialogClose>
+                            <button
+                                type="submit"
+                                className="h-[44px] flex-[1.35] rounded-xl bg-[#9333EA] text-[16px] font-semibold text-white shadow-[0px_4px_6px_-4px_rgba(168,85,247,0.2),0px_10px_15px_-3px_rgba(168,85,247,0.2)] transition hover:bg-[#7c2dd2]"
+                            >
+                                Salvar transação
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </DialogContent>
         </Dialog>
     )
