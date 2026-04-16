@@ -4,6 +4,7 @@ import BalanceCard from './_components/ballance-card'
 import { FinancialMetricCard } from './_components/financial-metric-card'
 import { TransactionsChart } from './_components/transactions-chart'
 import { AiInsights } from './_components/ai-insights'
+import { Transactions } from '@/src/components/transactions'
 import pigIcon from '@/src/assets/pig-icon.png'
 
 export default function Home() {
@@ -39,6 +40,8 @@ export default function Home() {
                         <TransactionsChart data={chartData} />
                         <AiInsights />
                     </section>
+
+                    <Transactions />
                 </main>
             </div>
         </div>
