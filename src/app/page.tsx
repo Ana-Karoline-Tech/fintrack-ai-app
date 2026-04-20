@@ -7,27 +7,57 @@ import { AiInsights } from './_components/ai-insights'
 import { Transactions } from '@/src/components/transactions'
 import pigIcon from '@/src/assets/pig-icon.png'
 import { db } from '../lib/prisma'
+import { redirect } from 'next/navigation'
 
-export default async function Home() {
-    // 1. Buscar transações recentes
+interface HomeProps {
+    searchParams: Promise<{
+        month?: string
+    }>
+}
+
+export default async function Home(props: HomeProps) {
+    const searchParams = await props.searchParams;
+    const month = searchParams.month;
+
+    // Se não houver mês, redireciona para o mês atual
+    if (!month) {
+        redirect(`/?month=${(new Date().getMonth() + 1).toString().padStart(2, '0')}`)
+    }
+
+    const year = new Date().getFullYear()
+
+    // 1. Buscar transações do mês selecionado
+    // Nota: Em produção, você deve validar se o mês é um número de 01 a 12
     const transactions = await db.transaction.findMany({
+        where: {
+            date: {
+                gte: new Date(`${year}-${month}-01`),
+                lt: new Date(`${year}-${month}-31`), 
+            },
+        },
         orderBy: { date: 'desc' },
         take: 10,
     })
 
-    // 2. Buscar todas as transações para calcular métricas
-    // (Em um app real, você filtraria pelo mês selecionado)
-    const allTransactions = await db.transaction.findMany()
+    // 2. Buscar métricas do mês selecionado
+    const monthTransactions = await db.transaction.findMany({
+        where: {
+            date: {
+                gte: new Date(`${year}-${month}-01`),
+                lt: new Date(`${year}-${month}-31`),
+            },
+        },
+    })
 
-    const receitas = allTransactions
+    const receitas = monthTransactions
         .filter((t) => t.type === 'DEPOSIT')
         .reduce((acc, t) => acc + Number(t.amount), 0)
 
-    const despesas = allTransactions
+    const despesas = monthTransactions
         .filter((t) => t.type === 'EXPENSE')
         .reduce((acc, t) => acc + Number(t.amount), 0)
 
-    const investimentos = allTransactions
+    const investimentos = monthTransactions
         .filter((t) => t.type === 'INVESTMENT')
         .reduce((acc, t) => acc + Number(t.amount), 0)
 
