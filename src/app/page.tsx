@@ -6,12 +6,37 @@ import { TransactionsChart } from './_components/transactions-chart'
 import { AiInsights } from './_components/ai-insights'
 import { Transactions } from '@/src/components/transactions'
 import pigIcon from '@/src/assets/pig-icon.png'
+import { db } from '../lib/prisma'
 
-export default function Home() {
+export default async function Home() {
+    // 1. Buscar transações recentes
+    const transactions = await db.transaction.findMany({
+        orderBy: { date: 'desc' },
+        take: 10,
+    })
+
+    // 2. Buscar todas as transações para calcular métricas
+    // (Em um app real, você filtraria pelo mês selecionado)
+    const allTransactions = await db.transaction.findMany()
+
+    const receitas = allTransactions
+        .filter((t) => t.type === 'DEPOSIT')
+        .reduce((acc, t) => acc + Number(t.amount), 0)
+
+    const despesas = allTransactions
+        .filter((t) => t.type === 'EXPENSE')
+        .reduce((acc, t) => acc + Number(t.amount), 0)
+
+    const investimentos = allTransactions
+        .filter((t) => t.type === 'INVESTMENT')
+        .reduce((acc, t) => acc + Number(t.amount), 0)
+
+    const balance = receitas - despesas - investimentos
+
     const chartData = [
-        { name: 'Ganhos', value: 7000, color: '#9333EA' },
-        { name: 'Gastos', value: 1800, color: '#F43F5E' },
-        { name: 'Invest.', value: 1200, color: '#3B82F6' },
+        { name: 'Ganhos', value: receitas, color: '#9333EA' },
+        { name: 'Gastos', value: despesas, color: '#F43F5E' },
+        { name: 'Invest.', value: investimentos, color: '#3B82F6' },
     ]
 
     return (
@@ -23,9 +48,9 @@ export default function Home() {
                     <section className="grid lg:grid-cols-3 grid-cols-1 gap-6">
                         <div className="lg:col-span-2 col-span-1">
                             <BalanceCard
-                                balance={12450.32}
-                                receitas={15890.75}
-                                despesas={3440.43}
+                                balance={balance}
+                                receitas={receitas}
+                                despesas={despesas}
                             />
                         </div>
                         <FinancialMetricCard
@@ -41,7 +66,7 @@ export default function Home() {
                         <AiInsights />
                     </section>
 
-                    <Transactions />
+                    <Transactions transactions={transactions} />
                 </main>
             </div>
         </div>
