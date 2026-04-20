@@ -1,6 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import {
     DialogClose,
     Dialog,
@@ -18,7 +21,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/src/components/ui/select'
-import { X } from 'lucide-react'
+import { X, Loader2Icon } from 'lucide-react'
+import {
+    TRANSACTION_CATEGORY_OPTIONS,
+    TRANSACTION_PAYMENT_METHOD_OPTIONS,
+    TRANSACTION_TYPE_OPTIONS,
+} from '../_constants/transaction'
+import {
+    TransactionCategory,
+    TransactionPaymentMethod,
+    TransactionType,
+} from '@prisma/client'
+import { upsertTransaction } from '../_actions/upsert-transaction'
+import { UpsertTransactionData, upsertTransactionSchema } from '../_schemas/transactions'
 
 /** Ícone “+” exportado do Figma (Button > Container, node 2:204) */
 function IconAddFigma() {
@@ -42,6 +57,31 @@ function IconAddFigma() {
 
 export const AddTransactionButton = () => {
     const [open, setIsOpen] = useState<boolean>(false)
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        control,
+        formState: { errors, isSubmitting },
+    } = useForm<UpsertTransactionData>({
+        resolver: zodResolver(upsertTransactionSchema),
+        defaultValues: {
+            name: '',
+            amount: 0,
+            date: new Date(),
+        },
+    })
+
+    const onSubmit = async (data: UpsertTransactionData) => {
+        try {
+            await upsertTransaction(data)
+            reset()
+            setIsOpen(false)
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     return (
         <Dialog open={open} onOpenChange={setIsOpen}>
@@ -74,73 +114,170 @@ export const AddTransactionButton = () => {
                     </DialogClose>
                 </DialogHeader>
 
-                <form className="space-y-4 overflow-y-auto px-6 py-5">
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-4 overflow-y-auto px-6 py-5"
+                >
                     <div className="space-y-2">
-                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Título</Label>
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">
+                            Título
+                        </Label>
                         <Input
+                            {...register('name')}
                             placeholder="Ex: Almoço, Freela..."
                             className="h-[44px] rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#F1F5F9] placeholder:text-[#64748B] focus-visible:border-[#64748B] focus-visible:ring-0"
                         />
+                        {errors.name && (
+                            <p className="text-red-500 text-sm">
+                                {errors.name.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Valor (R$)</Label>
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">
+                            Valor (R$)
+                        </Label>
                         <Input
+                            id="amount"
+                            type="number"
+                            {...register('amount', { valueAsNumber: true })}
                             placeholder="0,00"
                             inputMode="decimal"
                             className="h-[44px] rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#F1F5F9] placeholder:text-[#64748B] focus-visible:border-[#64748B] focus-visible:ring-0"
                         />
+                        {errors.amount && (
+                            <p className="text-red-500 text-sm">
+                                {errors.amount.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Tipo</Label>
-                        <Select>
-                            <SelectTrigger className="h-[44px] w-full rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#CBD5E1] [&_svg]:text-[#94A3B8]">
-                                <SelectValue placeholder="Selecione o tipo" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="income">Receita</SelectItem>
-                                <SelectItem value="expense">Despesa</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">
+                            Tipo
+                        </Label>
+                        <Controller
+                            name="type"
+                            control={control}
+                            render={({ field }) => (
+                                <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                >
+                                    <SelectTrigger className="h-[44px] w-full rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#CBD5E1] [&_svg]:text-[#94A3B8]">
+                                        <SelectValue placeholder="Selecione o tipo" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {TRANSACTION_TYPE_OPTIONS.map(
+                                            (option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            ),
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                        {errors.type && (
+                            <p className="text-red-500 text-sm">
+                                {errors.type.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Categoria</Label>
-                        <Select>
-                            <SelectTrigger className="h-[44px] w-full rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#CBD5E1] [&_svg]:text-[#94A3B8]">
-                                <SelectValue placeholder="Selecione a categoria" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="food">Alimentação</SelectItem>
-                                <SelectItem value="work">Trabalho</SelectItem>
-                                <SelectItem value="entertainment">Entretenimento</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">
+                            Categoria
+                        </Label>
+                        <Controller
+                            name="category"
+                            control={control}
+                            render={({ field }) => (
+                                <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                >
+                                    <SelectTrigger className="h-[44px] w-full rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#CBD5E1] [&_svg]:text-[#94A3B8]">
+                                        <SelectValue placeholder="Selecione a categoria" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {TRANSACTION_CATEGORY_OPTIONS.map(
+                                            (option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            ),
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                        {errors.category && (
+                            <p className="text-red-500 text-sm">
+                                {errors.category.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
                         <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">
                             Método de pagamento
                         </Label>
-                        <Select>
-                            <SelectTrigger className="h-[44px] w-full rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#CBD5E1] [&_svg]:text-[#94A3B8]">
-                                <SelectValue placeholder="Selecione o método" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="pix">PIX</SelectItem>
-                                <SelectItem value="debit">Débito</SelectItem>
-                                <SelectItem value="credit">Crédito</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <Controller
+                            name="paymentMethod"
+                            control={control}
+                            render={({ field }) => (
+                                <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                >
+                                    <SelectTrigger className="h-[44px] w-full rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#CBD5E1] [&_svg]:text-[#94A3B8]">
+                                        <SelectValue placeholder="Selecione o método" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {TRANSACTION_PAYMENT_METHOD_OPTIONS.map(
+                                            (option) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </SelectItem>
+                                            ),
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                        {errors.paymentMethod && (
+                            <p className="text-red-500 text-sm">
+                                {errors.paymentMethod.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">Data</Label>
+                        <Label className="text-[14px] font-medium leading-[14px] tracking-normal text-[#CBD5E1]">
+                            Data
+                        </Label>
                         <Input
-                            placeholder="__/__/__"
-                            className="h-[44px] rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#F1F5F9] placeholder:text-[#64748B] focus-visible:border-[#64748B] focus-visible:ring-0"
+                            {...register('date')}
+                            type="date"
+                            className="h-[44px] rounded-full border-[#334155] bg-[#334155] px-4 text-[14px] text-[#F1F5F9] placeholder:text-[#64748B] focus-visible:border-[#64748B] focus-visible:ring-0 [color-scheme:dark]"
                         />
+                        {errors.date && (
+                            <p className="text-red-500 text-sm">
+                                {errors.date.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="pt-2">
@@ -155,8 +292,12 @@ export const AddTransactionButton = () => {
                             </DialogClose>
                             <button
                                 type="submit"
-                                className="h-[44px] flex-[1.35] rounded-xl bg-[#9333EA] text-[16px] font-semibold text-white shadow-[0px_4px_6px_-4px_rgba(168,85,247,0.2),0px_10px_15px_-3px_rgba(168,85,247,0.2)] transition hover:bg-[#7c2dd2]"
+                                disabled={isSubmitting}
+                                className="inline-flex h-[44px] flex-[1.35] items-center justify-center gap-2 rounded-xl bg-[#9333EA] text-[16px] font-semibold text-white shadow-[0px_4px_6px_-4px_rgba(168,85,247,0.2),0px_10px_15px_-3px_rgba(168,85,247,0.2)] transition hover:bg-[#7c2dd2] disabled:opacity-50"
                             >
+                                {isSubmitting && (
+                                    <Loader2Icon className="animate-spin" size={16} />
+                                )}
                                 Salvar transação
                             </button>
                         </div>
