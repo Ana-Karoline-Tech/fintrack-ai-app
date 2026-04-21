@@ -1,7 +1,7 @@
 import { TransactionCategory, TransactionType } from "@prisma/client";
 import dayjs from "dayjs";
 import "dayjs/locale/pt-br";
-import { AddTransactionButton } from "@/src/components/add-transaction-button";
+import { AddTransactionButton } from "@/src/features/transactions/components/add-transaction-button";
 import { TransactionIcon } from "@/src/components/transaction-icon";
 import Link from "next/link";
 
