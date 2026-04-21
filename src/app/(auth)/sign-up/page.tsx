@@ -13,42 +13,38 @@ import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
 export default function SignUpPage() {
-    const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const router = useRouter()
 
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<SignUpSchema>({
         resolver: zodResolver(signUpSchema),
+        defaultValues: {
+            name: '',
+            email: '',
+            password: '',
+        }
     })
 
     const onSubmit = async (data: SignUpSchema) => {
-        setIsLoading(true)
         setError(null)
 
-        const { error } = await authClient.signUp.email({
+        await authClient.signUp.email({
             email: data.email,
             password: data.password,
             name: data.name,
             callbackURL: "/",
         }, {
-            onRequest: () => setIsLoading(true),
             onSuccess: () => {
-                setIsLoading(false)
                 router.push("/")
             },
             onError: (ctx) => {
-                setIsLoading(false)
                 setError(ctx.error.message || "Ocorreu um erro ao criar sua conta")
             }
         })
-
-        if (error) {
-            setError(error.message || "Ocorreu um erro ao criar sua conta")
-        }
     }
 
     return (
@@ -113,10 +109,10 @@ export default function SignUpPage() {
 
                 <button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isSubmitting}
                     className="w-full bg-[#9333EA] hover:bg-[#7e22ce] transition-colors flex items-center justify-center gap-2 font-semibold rounded-2xl py-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    {isLoading ? (
+                    {isSubmitting ? (
                         <Loader2 className="animate-spin" />
                     ) : (
                         <>
