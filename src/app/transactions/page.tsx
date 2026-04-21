@@ -1,11 +1,11 @@
 import { Header } from "@/src/components/common/header";
 import { Sidebar } from "@/src/components/common/sidebar";
+import { TRANSACTION_TYPE_LABELS } from "@/src/features/transactions/constants";
 import {
-  TRANSACTION_CATEGORY_LABELS,
-  TRANSACTION_PAYMENT_METHOD_LABELS,
-  TRANSACTION_TYPE_LABELS,
-} from "@/src/features/transactions/constants";
-import { TransactionPaymentMethod } from "@prisma/client";
+  formatTransactionBRL,
+  getTransactionCategoryLabel,
+  getTransactionPaymentMethodLabel,
+} from "@/src/features/transactions/utils/format";
 import { auth } from "@/src/lib/auth";
 import { db } from "@/src/lib/prisma";
 import {
@@ -16,8 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/src/components/ui/table";
-import actionIcons from "@/src/assets/figma/transaction-actions-1.svg";
-import Image from "next/image";
+import { TransactionRowActions } from "@/src/features/transactions/components/transaction-row-actions";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -26,21 +25,6 @@ const typeBadgeStyles = {
   EXPENSE: "bg-[rgba(251,44,54,0.2)] text-[#FF6467]",
   INVESTMENT: "bg-[rgba(43,127,255,0.2)] text-[#51A2FF]",
 } as const;
-
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(value);
-}
-
-function getPaymentMethodLabel(paymentMethod: TransactionPaymentMethod) {
-  if (paymentMethod === "BOLETO") {
-    return "Boleto";
-  }
-
-  return TRANSACTION_PAYMENT_METHOD_LABELS[paymentMethod];
-}
 
 export default async function TransactionsPage() {
   const session = await auth.api.getSession({
@@ -70,7 +54,7 @@ export default async function TransactionsPage() {
         <main className="space-y-6 p-8 font-(family-name:--font-inter)">
           <section className="space-y-1">
             <h1 className="text-3xl font-bold leading-9 tracking-[-0.025em] text-white">
-              Transacoes
+              Transações
             </h1>
             <p className="text-sm font-normal leading-5 text-[#90A1B9]">
               Gerencie suas entradas, despesas e investimentos
@@ -88,7 +72,7 @@ export default async function TransactionsPage() {
                     Categoria
                   </TableHead>
                   <TableHead className="px-4 py-4 text-xs font-semibold uppercase tracking-[0.05em] text-[#94A3B8]">
-                    Metodo
+                    Método
                   </TableHead>
                   <TableHead className="px-4 py-4 text-xs font-semibold uppercase tracking-[0.05em] text-[#94A3B8]">
                     Tipo
@@ -100,7 +84,7 @@ export default async function TransactionsPage() {
                     Valor
                   </TableHead>
                   <TableHead className="px-4 py-4 text-right text-xs font-semibold uppercase tracking-[0.05em] text-[#94A3B8]">
-                    Acoes
+                    Ações
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -115,10 +99,12 @@ export default async function TransactionsPage() {
                       {transaction.name}
                     </TableCell>
                     <TableCell className="px-4 py-6 text-sm text-[#CAD5E2]">
-                      {TRANSACTION_CATEGORY_LABELS[transaction.category]}
+                      {getTransactionCategoryLabel(transaction.category)}
                     </TableCell>
                     <TableCell className="px-4 py-6 text-sm text-[#90A1B9]">
-                      {getPaymentMethodLabel(transaction.paymentMethod)}
+                      {getTransactionPaymentMethodLabel(
+                        transaction.paymentMethod
+                      )}
                     </TableCell>
                     <TableCell className="px-4 py-6">
                       <span
@@ -133,17 +119,20 @@ export default async function TransactionsPage() {
                       {new Intl.DateTimeFormat("pt-BR").format(transaction.date)}
                     </TableCell>
                     <TableCell className="px-4 py-6 text-right text-sm font-semibold text-[#CAD5E2]">
-                      {formatCurrency(Number(transaction.amount))}
+                      {formatTransactionBRL(Number(transaction.amount))}
                     </TableCell>
                     <TableCell className="px-4 py-6">
-                      <div className="ml-auto w-fit">
-                        <Image
-                          src={actionIcons}
-                          alt="Acoes da transacao"
-                          width={92}
-                          height={36}
-                        />
-                      </div>
+                      <TransactionRowActions
+                        transaction={{
+                          id: transaction.id,
+                          name: transaction.name,
+                          amount: Number(transaction.amount),
+                          type: transaction.type,
+                          category: transaction.category,
+                          paymentMethod: transaction.paymentMethod,
+                          date: transaction.date.toISOString(),
+                        }}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -154,7 +143,7 @@ export default async function TransactionsPage() {
                       colSpan={7}
                       className="px-4 py-12 text-center text-sm text-[#90A1B9]"
                     >
-                      Nenhuma transacao encontrada.
+                      Nenhuma transação encontrada.
                     </TableCell>
                   </TableRow>
                 )}
