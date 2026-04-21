@@ -20,25 +20,28 @@ export const AuthLayout = ({
     footerText,
 }: AuthLayoutProps) => {
         return (
-            <section className="h-screen flex items-center justify-center">
-                <div className="bg-[#18181B] w-full max-w-md p-8 rounded-2xl">
-                    <div className="flex flex-col items-center mb-8">
-                        <div className='bg-[#9333EA] h-16 w-16 flex items-center justify-center rounded-2xl mb-6'>
-                            <Image src={DolaIcon} alt='Ícone da página de autenticação' />
+            <section className="flex min-h-screen items-center justify-center bg-[#09090B] px-4 py-8 font-(family-name:--font-inter)">
+                <div className="w-full max-w-md rounded-2xl border border-zinc-800/60 bg-[#121214] p-8 shadow-2xl shadow-black/40">
+                    <div className="mb-8 flex flex-col items-center">
+                        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#8B5CF6] shadow-[0_0_32px_rgba(139,92,246,0.35)]">
+                            <Image src={DolaIcon} alt="Ícone da página de autenticação" />
                         </div>
 
-                        <h1 className='text-2xl font-bold text-white mb-2'>
+                        <h1 className="mb-2 text-center text-2xl font-bold text-white">
                             {title}
                         </h1>
-                        <p className='text-[#9F9FA9] text-sm'>{description}</p>
+                        <p className="text-center text-sm text-zinc-400">{description}</p>
                     </div>
 
                     {children}
 
-                    <div className='mt-10 text-center'>
-                        <p className='text-sm'>
+                    <div className="mt-10 text-center">
+                        <p className="text-sm text-zinc-400">
                             {footerText}
-                            <Link href={footerHref} className='ml-1 text-[#9333EA] font-semibold hover:underline'>
+                            <Link
+                                href={footerHref}
+                                className="ml-1 font-semibold text-[#8B5CF6] transition hover:text-violet-400 hover:underline"
+                            >
                                 {footerLinkText}
                             </Link>
                         </p>
