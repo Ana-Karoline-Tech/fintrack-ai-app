@@ -4,6 +4,7 @@ import { MonthSelect } from "./month-select";
 
 interface HeaderProps {
   userName: string;
+  userImage?: string | null;
   date: Date;
 }
 
@@ -17,7 +18,7 @@ const formatToday = (date: Date) => {
   return `${weekdayCapitalized}, ${day} de ${month}`;
 };
 
-export const Header = ({ userName, date }: HeaderProps) => {
+export const Header = ({ userName, userImage, date }: HeaderProps) => {
   const firstName = userName.trim().split(" ")[0] || "usuario";
   const greeting = `Bem-vindo de volta, ${firstName}! 👋`;
 
@@ -30,9 +31,9 @@ export const Header = ({ userName, date }: HeaderProps) => {
 
       <div className="flex items-center gap-4">
         <MonthSelect />
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#334155] bg-[#1E293B]">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#334155] bg-[#1E293B] overflow-hidden">
           <Image
-            src={avatarUser}
+            src={userImage || avatarUser}
             alt="Avatar do usuário"
             width={38}
             height={38}
