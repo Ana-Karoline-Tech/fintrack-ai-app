@@ -16,13 +16,30 @@ export const upsertTransaction = async (params: UpsertTransactionData) => {
   }
 
   upsertTransactionSchema.parse(params);
-  
-  await db.transaction.create({
-    data: {
-        ...params,
-        userId: session.user.id
-    },
-  });
+
+  const { id, ...data } = params;
+
+  if (id) {
+    const existing = await db.transaction.findFirst({
+      where: { id, userId: session.user.id },
+    });
+
+    if (!existing) {
+      throw new Error("Transação não encontrada");
+    }
+
+    await db.transaction.update({
+      where: { id },
+      data,
+    });
+  } else {
+    await db.transaction.create({
+      data: {
+        ...data,
+        userId: session.user.id,
+      },
+    });
+  }
 
   revalidatePath("/");
   revalidatePath("/transactions");
