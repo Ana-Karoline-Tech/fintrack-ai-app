@@ -8,6 +8,8 @@ import { Transactions } from '@/src/components/transactions'
 import pigIcon from '@/src/assets/pig-icon.png'
 import { db } from '../lib/prisma'
 import { redirect } from 'next/navigation'
+import { auth } from '../lib/auth'
+import { headers } from 'next/headers'
 
 interface HomeProps {
     searchParams: Promise<{
@@ -16,6 +18,17 @@ interface HomeProps {
 }
 
 export default async function Home(props: HomeProps) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+
+    if (!session) {
+        redirect("/sign-in")
+    }
+
+    const userId = session.user.id
+    const userName = session.user.name
+
     const searchParams = await props.searchParams;
     const month = searchParams.month;
 
@@ -26,10 +39,10 @@ export default async function Home(props: HomeProps) {
 
     const year = new Date().getFullYear()
 
-    // 1. Buscar transações do mês selecionado
-    // Nota: Em produção, você deve validar se o mês é um número de 01 a 12
+    // 1. Buscar transações do mês selecionado para o usuário atual
     const transactions = await db.transaction.findMany({
         where: {
+            userId,
             date: {
                 gte: new Date(`${year}-${month}-01`),
                 lt: new Date(`${year}-${month}-31`), 
@@ -39,9 +52,10 @@ export default async function Home(props: HomeProps) {
         take: 10,
     })
 
-    // 2. Buscar métricas do mês selecionado
+    // 2. Buscar métricas do mês selecionado para o usuário atual
     const monthTransactions = await db.transaction.findMany({
         where: {
+            userId,
             date: {
                 gte: new Date(`${year}-${month}-01`),
                 lt: new Date(`${year}-${month}-31`),
@@ -73,7 +87,11 @@ export default async function Home(props: HomeProps) {
         <div className="flex min-h-screen bg-[#0F111A] font-sans">
             <Sidebar />
             <div className="flex flex-1 flex-col">
-                <Header userName="João da Silva" date={new Date()} />
+                <Header 
+                    userName={userName} 
+                    userImage={session.user.image} 
+                    date={new Date()} 
+                />
                 <main className="space-y-8 p-8">
                     <section className="grid lg:grid-cols-3 grid-cols-1 gap-6">
                         <div className="lg:col-span-2 col-span-1">
