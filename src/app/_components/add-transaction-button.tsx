@@ -69,7 +69,7 @@ export const AddTransactionButton = () => {
         defaultValues: {
             name: '',
             amount: 0,
-            date: new Date(),
+            date: new Date().toISOString().split('T')[0] as unknown as Date,
         },
     })
 
