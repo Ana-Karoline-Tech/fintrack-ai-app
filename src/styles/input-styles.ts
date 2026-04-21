@@ -1,1 +1,2 @@
-export const inputClass = "w-full p-4 border rounded-2xl border-zinc-800 outline-none placeholder:text-zinc-600"
+export const inputClass =
+  "w-full rounded-xl border border-zinc-800/90 bg-[#0A0A0B] p-4 text-sm text-zinc-100 outline-none transition-[border-color,box-shadow] placeholder:text-zinc-500 focus:border-violet-500/50 focus:ring-2 focus:ring-violet-500/20"
