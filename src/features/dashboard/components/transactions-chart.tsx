@@ -1,6 +1,6 @@
 import { DonutChart } from "./donut-chart"
 import { ChartCard } from "./chart-card"
-import { MonthSelect } from "./month-select"
+import { MonthSelect } from "@/src/components/common/month-select"
 
 interface TransactionsChartProps {
     data: { name: string; value: number; color: string }[]
@@ -15,7 +15,7 @@ export const TransactionsChart = ({ data }: TransactionsChartProps) => {
                 <h2 className="text-xl font-bold leading-7 text-[#F1F5F9]">
                     Gráficos
                 </h2>
-                <MonthSelect value="Este mês" />
+                <MonthSelect />
             </div>
 
             <div className="mt-8 flex flex-1 flex-col items-center">

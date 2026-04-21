@@ -1,12 +1,12 @@
 "use client";
 
-import { AuthLayout } from '../_components/auth.layout'
+import { AuthLayout } from '@/src/features/auth/components/auth.layout'
 import ArrowIcon from '@/src/assets/arrow-icon.png'
 import Image from 'next/image'
-import { inputClass } from '../../_styles/input'
+import { inputClass } from '@/src/styles/input-styles'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { signUpSchema, type SignUpSchema } from '../../_schemas/auth'
+import { signUpSchema, type SignUpSchema } from '@/src/features/auth/schemas'
 import { authClient } from '@/src/lib/auth-client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'

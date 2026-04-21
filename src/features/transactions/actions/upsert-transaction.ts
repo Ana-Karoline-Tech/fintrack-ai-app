@@ -2,7 +2,7 @@
 
 import { db } from "@/src/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { upsertTransactionSchema, UpsertTransactionData } from "../../_schemas/transactions";
+import { upsertTransactionSchema, UpsertTransactionData } from "../schemas";
 import { auth } from "@/src/lib/auth";
 import { headers } from "next/headers";
 

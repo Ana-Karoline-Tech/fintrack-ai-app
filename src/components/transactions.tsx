@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { AddTransactionButton } from '@/src/app/_components/add-transaction-button'
+import { AddTransactionButton } from '@/src/features/transactions/components/add-transaction-button'
 import { Transaction, TransactionCategory } from '@prisma/client'
-import { TRANSACTION_CATEGORY_LABELS } from '../app/_constants/transaction'
+import { TRANSACTION_CATEGORY_LABELS } from '@/src/features/transactions/constants'
 
 export type TransactionWithFormattedData = Transaction
 

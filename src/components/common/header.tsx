@@ -1,6 +1,6 @@
 import Image from "next/image";
 import avatarUser from "@/src/assets/avatar.png";
-import { MonthSelect } from "./month-select";
+import { MonthSelect } from "@/src/components/common/month-select";
 
 interface HeaderProps {
   userName: string;

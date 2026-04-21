@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import Groq from 'groq-sdk'
-import { TRANSACTION_CATEGORY_LABELS } from '../../_constants/transaction'
+import { TRANSACTION_CATEGORY_LABELS } from '@/src/features/transactions/constants'
 import type { TransactionCategory } from '@prisma/client'
 import { auth } from '@/src/lib/auth'
 import { headers } from 'next/headers'
@@ -52,7 +52,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    // Usando a chave da Groq que você configurou
     const apiKey = process.env.GROQCLOUD_API_KEY || process.env.GROQ_API_KEY
     if (!apiKey) {
         return NextResponse.json(

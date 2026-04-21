@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import {
     DialogClose,
     Dialog,
@@ -26,14 +25,14 @@ import {
     TRANSACTION_CATEGORY_OPTIONS,
     TRANSACTION_PAYMENT_METHOD_OPTIONS,
     TRANSACTION_TYPE_OPTIONS,
-} from '../_constants/transaction'
+} from '../constants'
 import {
     TransactionCategory,
     TransactionPaymentMethod,
     TransactionType,
 } from '@prisma/client'
-import { upsertTransaction } from '../_actions/upsert-transaction'
-import { UpsertTransactionData, upsertTransactionSchema } from '../_schemas/transactions'
+import { upsertTransaction } from '../actions/upsert-transaction'
+import { UpsertTransactionData, upsertTransactionSchema } from '../schemas'
 
 /** Ícone “+” exportado do Figma (Button > Container, node 2:204) */
 function IconAddFigma() {

@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/src/components/ui/select";
-import { MONTH_OPTIONS } from "../_constants/months";
+import { MONTH_OPTIONS } from "@/src/constants/months";
 
 export const MonthSelect = () => {
   const { push } = useRouter();
