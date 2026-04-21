@@ -56,13 +56,13 @@ export default function SignInPage() {
         >
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {error && (
-                    <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-sm p-3 rounded-xl text-center">
+                    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-center text-sm text-red-400">
                         {error}
                     </div>
                 )}
 
                 <div>
-                    <label className="block text-sm text-zinc-300 mb-2">
+                    <label className="mb-2 block text-sm font-medium text-white">
                         E-mail
                     </label>
                     <input
@@ -77,7 +77,7 @@ export default function SignInPage() {
                 </div>
 
                 <div>
-                    <label className="block text-sm text-zinc-300 mb-2">
+                    <label className="mb-2 block text-sm font-medium text-white">
                         Senha
                     </label>
                     <input
@@ -94,7 +94,7 @@ export default function SignInPage() {
                 <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-[#9333EA] hover:bg-[#7e22ce] transition-colors flex items-center justify-center gap-2 font-semibold rounded-2xl py-4 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-[#8B5CF6] py-4 font-semibold text-white shadow-lg shadow-violet-500/25 transition-colors hover:bg-[#7C3AED] disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {isLoading ? (
                         <Loader2 className="animate-spin" />
