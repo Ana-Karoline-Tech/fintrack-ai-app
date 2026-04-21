@@ -10,6 +10,7 @@ import { db } from '../lib/prisma'
 import { redirect } from 'next/navigation'
 import { auth } from '../lib/auth'
 import { headers } from 'next/headers'
+import { TransactionCategory } from '@prisma/client'
 
 interface HomeProps {
     searchParams: Promise<{
@@ -32,14 +33,12 @@ export default async function Home(props: HomeProps) {
     const searchParams = await props.searchParams;
     const month = searchParams.month;
 
-    // Se não houver mês, redireciona para o mês atual
     if (!month) {
         redirect(`/?month=${(new Date().getMonth() + 1).toString().padStart(2, '0')}`)
     }
 
     const year = new Date().getFullYear()
 
-    // 1. Buscar transações do mês selecionado para o usuário atual
     const transactions = await db.transaction.findMany({
         where: {
             userId,
@@ -52,7 +51,6 @@ export default async function Home(props: HomeProps) {
         take: 10,
     })
 
-    // 2. Buscar métricas do mês selecionado para o usuário atual
     const monthTransactions = await db.transaction.findMany({
         where: {
             userId,
@@ -76,6 +74,26 @@ export default async function Home(props: HomeProps) {
         .reduce((acc, t) => acc + Number(t.amount), 0)
 
     const balance = receitas - despesas - investimentos
+
+    // Agrupamento por categoria para a IA
+    const expensesByCategory = await db.transaction.groupBy({
+        by: ['category'],
+        where: {
+            userId,
+            type: 'EXPENSE',
+            date: {
+                gte: new Date(`${year}-${month}-01`),
+                lt: new Date(`${year}-${month}-31`),
+            },
+        },
+        _sum: { amount: true },
+    })
+
+    const totalExpensePerCategory = expensesByCategory.map(item => ({
+        category: item.category as TransactionCategory,
+        totalAmount: Number(item._sum.amount),
+        percentageOfTotal: despesas > 0 ? Math.round((Number(item._sum.amount) / despesas) * 100) : 0
+    }))
 
     const chartData = [
         { name: 'Ganhos', value: receitas, color: '#9333EA' },
@@ -111,7 +129,15 @@ export default async function Home(props: HomeProps) {
 
                     <section className="grid lg:grid-cols-[1.45fr_1fr] grid-cols-1 gap-6">
                         <TransactionsChart data={chartData} />
-                        <AiInsights />
+                        <AiInsights 
+                            month={month}
+                            year={year}
+                            balance={balance}
+                            depositsTotal={receitas}
+                            expensesTotal={despesas}
+                            investmentsTotal={investimentos}
+                            totalExpensePerCategory={totalExpensePerCategory}
+                        />
                     </section>
 
                     <Transactions transactions={transactions} />
