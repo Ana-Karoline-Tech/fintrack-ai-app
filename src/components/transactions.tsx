@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { AddTransactionButton } from '@/src/features/transactions/components/add-transaction-button'
+import {
+    formatTransactionBRL,
+    getTransactionCategoryLabel,
+} from '@/src/features/transactions/utils/format'
 import { Transaction, TransactionCategory } from '@prisma/client'
-import { TRANSACTION_CATEGORY_LABELS } from '@/src/features/transactions/constants'
 
 export type TransactionWithFormattedData = Transaction
 
@@ -19,14 +22,6 @@ const CATEGORY_ICONS = {
     [TransactionCategory.EDUCATION]: { emoji: '📚', bg: 'bg-[rgba(139,92,246,0.1)]' },
     [TransactionCategory.UTILITY]: { emoji: '💡', bg: 'bg-[rgba(234,179,8,0.1)]' },
     [TransactionCategory.OTHER]: { emoji: '📦', bg: 'bg-[rgba(100,116,139,0.1)]' },
-}
-
-function formatBRL(value: number): string {
-    const formatted = new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    }).format(Math.abs(value))
-    return formatted
 }
 
 export function Transactions({ transactions }: TransactionsProps) {
@@ -73,7 +68,7 @@ export function Transactions({ transactions }: TransactionsProps) {
                                         {new Date(tx.date).toLocaleDateString('pt-BR', {
                                             day: '2-digit',
                                             month: 'long',
-                                        })} • {TRANSACTION_CATEGORY_LABELS[tx.category]}
+                                        })} • {getTransactionCategoryLabel(tx.category)}
                                     </p>
                                 </div>
                             </div>
@@ -85,7 +80,9 @@ export function Transactions({ transactions }: TransactionsProps) {
                                 }`}
                             >
                                 {tx.type === 'DEPOSIT' ? '+' : '-'}
-                                {formatBRL(Number(tx.amount))}
+                                {formatTransactionBRL(Number(tx.amount), {
+                                    absolute: true,
+                                })}
                             </p>
                         </div>
                     )
