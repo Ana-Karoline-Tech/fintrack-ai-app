@@ -14,6 +14,7 @@
     "@prisma/client": "^5.22.0",
     "better-auth": "^1.6.6",
     "class-variance-authority": "^0.7.1",
+    "dayjs": "^1.11.10",
     "clsx": "^2.1.1",
     "groq-sdk": "^1.1.2",
     "lucide-react": "^1.8.0",
