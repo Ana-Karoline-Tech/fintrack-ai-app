@@ -16,16 +16,16 @@ export const upsertTransactionSchema = z.object({
       message: "O valor deve ser positivo.",
     }),
   type: z.nativeEnum(TransactionType, {
-    errorMap: () => ({ message: "O tipo é obrigatório." }),
+    message: "O tipo é obrigatório.",
   }),
   category: z.nativeEnum(TransactionCategory, {
-    errorMap: () => ({ message: "A categoria é obrigatória." }),
+    message: "A categoria é obrigatória.",
   }),
   paymentMethod: z.nativeEnum(TransactionPaymentMethod, {
-    errorMap: () => ({ message: "O método de pagamento é obrigatório." }),
+    message: "O método de pagamento é obrigatório.",
   }),
   date: z.coerce.date({
-    errorMap: () => ({ message: "A data é obrigatória." }),
+    message: "A data é obrigatória.",
   }),
 });
 
