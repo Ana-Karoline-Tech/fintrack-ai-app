@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💰 FinTrack AI - Dashboard Financeiro Inteligente
 
-## Getting Started
+FinTrack AI é um dashboard financeiro moderno que utiliza Inteligência Artificial para transformar a maneira como você gerencia seu dinheiro. Mais do que apenas registrar transações, a plataforma oferece insights preditivos e análises personalizadas para ajudar você a atingir seus objetivos financeiros.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📸 Demo
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<div align="center">
+  <!-- ESPAÇO PARA O GIPHY -->
+  <img src="src/giphy/giphy-fintrackAI.gif" alt="FinTrack AI Demo" width="100%">
+</div>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ Funcionalidades
 
-## Learn More
+- **Dashboard Inteligente:** Visualização clara de receitas, despesas e saldo atual.
+- **AI Insights:** Análise automática de gastos usando IA para identificar padrões e sugerir economias.
+- **Gestão de Transações:** CRUD completo de transações com categorização e filtros.
+- **Autenticação Segura:** Sistema de login robusto via Better Auth.
+- **Filtro Mensal:** Navegação intuitiva entre diferentes meses para análise histórica.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tecnologias
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router)
+- **Estilização:** [Tailwind CSS](https://tailwindcss.com/)
+- **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/) (via [Neon DB](https://neon.tech/))
+- **ORM:** [Prisma](https://www.prisma.io/)
+- **IA:** [Groq Cloud](https://groq.com/) (Llama 3.3 70B)
+- **Autenticação:** [Better Auth](https://www.better-auth.com/)
+- **Componentes:** [Radix UI](https://www.radix-ui.com/) & [Lucide React](https://lucide.dev/)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🚀 Próximos Passos (Roadmap)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] **Gráficos:** Otimização completa para representação gráfica de dados derivados do feedback da IA.
+- [ ] **Economia do Mês:** Implementação de metas de economia com feedback da IA.
+- [ ] **Gestão de Cartão de Crédito:** Visualização de faturas e limite disponível.
+- [ ] **Projetos Pessoais:** Planejamento para viagens, financiamentos e metas de longo prazo.
+- [ ] **Docker:** Containerização completa da aplicação para facilitar o deploy.
+
+---
+
+## 🔧 Execução
+
+
+Acesse [fintrack-ai-app-karol.vercel.app/](fintrack-ai-app-karol.vercel.app/) para ver o projeto em execução.
+
+---
+
+<div align="center">
+  Desenvolvido com ❤️ por <strong>🦋Ana Karoline Ribeiro🎀</strong>
+</div>
