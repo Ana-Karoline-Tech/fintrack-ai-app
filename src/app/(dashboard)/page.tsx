@@ -102,47 +102,37 @@ export default async function Home(props: HomeProps) {
     ]
 
     return (
-        <div className="flex min-h-screen bg-[#0F111A] font-sans">
-            <Sidebar />
-            <div className="flex flex-1 flex-col">
-                <Header 
-                    userName={userName} 
-                    userImage={session.user.image} 
-                    date={new Date()} 
+        <main className="space-y-8 p-8 overflow-auto">
+            <section className="grid lg:grid-cols-3 grid-cols-1 gap-6">
+                <div className="lg:col-span-2 col-span-1">
+                    <BalanceCard
+                        balance={balance}
+                        receitas={receitas}
+                        despesas={despesas}
+                    />
+                </div>
+                <FinancialMetricCard
+                    title="Economia do mês"
+                    value="+12%"
+                    description="Você economizou R$ 120,00 a mais que no mês passado."
+                    icon={pigIcon}
                 />
-                <main className="space-y-8 p-8">
-                    <section className="grid lg:grid-cols-3 grid-cols-1 gap-6">
-                        <div className="lg:col-span-2 col-span-1">
-                            <BalanceCard
-                                balance={balance}
-                                receitas={receitas}
-                                despesas={despesas}
-                            />
-                        </div>
-                        <FinancialMetricCard
-                            title="Economia do mês"
-                            value="+12%"
-                            description="Você economizou R$ 120,00 a mais que no mês passado."
-                            icon={pigIcon}
-                        />
-                    </section>
+            </section>
 
-                    <section className="grid lg:grid-cols-[1.45fr_1fr] grid-cols-1 gap-6">
-                        <TransactionsChart data={chartData} />
-                        <AiInsights 
-                            month={month}
-                            year={year}
-                            balance={balance}
-                            depositsTotal={receitas}
-                            expensesTotal={despesas}
-                            investmentsTotal={investimentos}
-                            totalExpensePerCategory={totalExpensePerCategory}
-                        />
-                    </section>
+            <section className="grid lg:grid-cols-[1.45fr_1fr] grid-cols-1 gap-6">
+                <TransactionsChart data={chartData} />
+                <AiInsights 
+                    month={month}
+                    year={year}
+                    balance={balance}
+                    depositsTotal={receitas}
+                    expensesTotal={despesas}
+                    investmentsTotal={investimentos}
+                    totalExpensePerCategory={totalExpensePerCategory}
+                />
+            </section>
 
-                    <Transactions transactions={transactions} />
-                </main>
-            </div>
-        </div>
+            <Transactions transactions={transactions} />
+        </main>
     )
 }

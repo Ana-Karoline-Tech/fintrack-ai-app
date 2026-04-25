@@ -3,9 +3,14 @@
 import { authClient } from '@/src/lib/auth-client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Loader2, LogOut } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 
-export function LogoutButton() {
+interface LogoutButtonProps {
+    children?: React.ReactNode;
+    className?: string;
+}
+
+export function LogoutButton({ children, className }: LogoutButtonProps) {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
 
@@ -25,12 +30,12 @@ export function LogoutButton() {
       <button
         onClick={handleLogout}
         disabled={isLoading}
-        className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors disabled:opacity-50"
+        className={className || "flex items-center gap-2 text-zinc-400 hover:text-white transition-colors disabled:opacity-50"}
         type="button"
         aria-label="Sair da conta"
       >
         {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-        <span>Sair</span>
+        {children || <span>Sair</span>}
       </button>
     );
-    }
+}

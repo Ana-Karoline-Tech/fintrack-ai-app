@@ -109,7 +109,7 @@ Responda em português do Brasil, em um texto direto e acionável (2 a 4 parágr
 
     try {
         const completion = await groq.chat.completions.create({
-            model: 'llama-3.3-70b-versatile',
+            model: 'llama-3.1-8b-instant',
             messages: [
                 {
                     role: 'system',
@@ -142,10 +142,10 @@ Responda em português do Brasil, em um texto direto e acionável (2 a 4 parágr
                 ? formatBRL(topCategory.totalAmount)
                 : null,
         })
-    } catch (err) {
+    } catch (err: any) {
         console.error('Groq API error:', err)
         return NextResponse.json(
-            { error: 'Erro ao gerar insights com Groq. Tente novamente.' },
+            { error: `Erro na IA: ${err.message || 'Erro ao gerar insights com Groq. Tente novamente.'}` },
             { status: 500 }
         )
     }
