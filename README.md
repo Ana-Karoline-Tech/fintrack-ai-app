@@ -48,7 +48,7 @@ FinTrack AI é um dashboard financeiro moderno que utiliza Inteligência Artific
 ## 🔧 Execução
 
 
-Acesse [fintrack-ai-app-karol.vercel.app/](fintrack-ai-app-karol.vercel.app/) para ver o projeto em execução.
+Acesse [[fintrack-ai-app-karol.vercel.app/](https://fintrack-ai-app-karol-o7chvnb0k-ana-karolines-projects-db4d6b14.vercel.app)](fintrack-ai-app-karol.vercel.app/) para ver o projeto em execução.
 
 ---
 
