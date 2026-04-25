@@ -23,7 +23,7 @@ export default function BalanceCard({
 }: BalanceCardProps) {
   return (
     <section
-      className="relative flex h-[254px] w-full flex-col justify-between self-stretch overflow-hidden rounded-[24px] bg-[#9333EA] p-8 font-sans shadow-[0px_8px_10px_-6px_rgba(168,85,247,0.2),0px_20px_25px_-5px_rgba(168,85,247,0.2)]"
+      className="relative flex h-[254px] w-full flex-col justify-between self-stretch overflow-hidden rounded-[24px] bg-[#9333EA] p-6 font-sans shadow-[0px_8px_10px_-6px_rgba(168,85,247,0.2),0px_20px_25px_-5px_rgba(168,85,247,0.2)] sm:p-8"
       aria-label="Resumo do saldo"
     >
       <div
@@ -37,7 +37,7 @@ export default function BalanceCard({
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute right-8 top-8 z-0 h-16 w-16 rounded-[22px] bg-white/10 p-2 shadow-[0_10px_30px_-20px_rgba(255,255,255,0.9)]"
+        className="pointer-events-none absolute right-4 top-4 z-0 flex h-10 w-10 items-center justify-center rounded-[14px] bg-white/10 p-1.5 shadow-[0_10px_30px_-20px_rgba(255,255,255,0.9)] sm:right-8 sm:top-8 sm:h-16 sm:w-16 sm:rounded-[22px] sm:p-2"
         aria-hidden
       >
         <Image
@@ -45,15 +45,15 @@ export default function BalanceCard({
           alt=""
           width={40}
           height={40}
-          className="object-contain"
+          className="h-6 w-6 object-contain sm:h-10 sm:w-10"
         />
       </div>
 
-      <div className="relative z-10 flex flex-col gap-2">
+      <div className="relative z-10 flex flex-col gap-1 sm:gap-2">
         <span className="text-sm font-normal leading-[1.4] text-[#F3E8FF]">
           Saldo total
         </span>
-        <strong className="text-[40px] font-bold leading-[1.1] tracking-[-0.02em] text-white">
+        <strong className="text-3xl font-bold leading-[1.1] tracking-[-0.02em] text-white sm:text-[40px]">
           {formatBRL(balance)}
         </strong>
       </div>

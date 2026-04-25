@@ -24,7 +24,7 @@ export const MonthSelect = () => {
       onValueChange={(value) => handleMonthChange(value)}
       defaultValue={month ?? ""}
     >
-      <SelectTrigger className="h-9 w-[162px] rounded-lg border border-[#1E293B] px-3 text-sm font-normal text-[#F1F5F9] font-sans bg-transparent">
+      <SelectTrigger className="h-9 w-[110px] rounded-lg border border-[#1E293B] bg-transparent px-3 font-sans text-sm font-normal text-[#F1F5F9] sm:w-[162px]">
         <SelectValue placeholder="Mês" />
       </SelectTrigger>
       <SelectContent className="bg-[#1E293B] border-[#334155] text-white">

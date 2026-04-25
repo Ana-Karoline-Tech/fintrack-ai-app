@@ -102,7 +102,7 @@ export default async function Home(props: HomeProps) {
     ]
 
     return (
-        <main className="space-y-8 p-8 overflow-auto">
+        <main className="space-y-6 p-4 overflow-auto sm:space-y-8 sm:p-8">
             <section className="grid lg:grid-cols-3 grid-cols-1 gap-6">
                 <div className="lg:col-span-2 col-span-1">
                     <BalanceCard

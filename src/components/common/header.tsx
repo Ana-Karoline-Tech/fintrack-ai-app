@@ -23,21 +23,25 @@ export const Header = ({ userName, userImage, date }: HeaderProps) => {
   const greeting = `Bem-vindo de volta, ${firstName}! 👋`;
 
   return (
-    <header className="flex h-[88px] w-full items-center justify-between border-b border-[#1E293B] bg-[#0F111A] px-8 font-sans">
+    <header className="flex h-[88px] w-full items-center justify-between border-b border-[#1E293B] bg-[#0F111A] px-4 font-sans md:px-8">
       <div className="flex flex-col">
-        <h1 className="text-lg font-semibold leading-7 text-[#F1F5F9]">{greeting}</h1>
-        <p className="text-xs font-normal leading-4 text-[#94A3B8]">{formatToday(date)}</p>
+        <h1 className="text-sm font-semibold leading-7 text-[#F1F5F9] sm:text-base md:text-lg">
+          {greeting}
+        </h1>
+        <p className="text-[10px] font-normal leading-4 text-[#94A3B8] sm:text-xs">
+          {formatToday(date)}
+        </p>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 md:gap-4">
         <MonthSelect />
-        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#334155] bg-[#1E293B] overflow-hidden">
+        <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-[#334155] bg-[#1E293B] md:h-10 md:w-10">
           <Image
             src={userImage || avatarUser}
             alt="Avatar do usuário"
             width={38}
             height={38}
-            className="h-[38px] w-[38px] rounded-full object-cover"
+            className="h-full w-full rounded-full object-cover"
           />
         </div>
       </div>
