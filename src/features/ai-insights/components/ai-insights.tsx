@@ -118,8 +118,8 @@ export const AiInsights = ({
                 ) : (
                     <>
                         {topCategory && topCategoryAmount && (
-                            <div className="bg-[#0F111A]/50 p-6 rounded-2xl border border-[#1E293B] flex gap-4">
-                                <div className="bg-[#9333EA]/10 p-3 rounded-xl h-fit shrink-0">
+                            <div className="bg-[#0F111A]/50 p-6 rounded-2xl border border-[#1E293B] flex flex-col sm:flex-row gap-4">
+                                <div className="bg-[#9333EA]/10 p-3 rounded-xl h-fit w-fit shrink-0">
                                     <Image src={insightsIcon} alt="" width={24} height={24} />
                                 </div>
                                 <div>
@@ -132,8 +132,8 @@ export const AiInsights = ({
                         )}
 
                         {suggestion && (
-                            <div className="bg-[#10B981]/5 border-[#10B981]/20 p-6 rounded-2xl border flex gap-4">
-                                <div className="bg-[#10B981]/10 p-3 rounded-xl h-fit shrink-0">
+                            <div className="bg-[#10B981]/5 border-[#10B981]/20 p-6 rounded-2xl border flex flex-col sm:flex-row gap-4">
+                                <div className="bg-[#10B981]/10 p-3 rounded-xl h-fit w-fit shrink-0">
                                     <Image src={bulbIcon} alt="" width={24} height={24} />
                                 </div>
                                 <div className="min-w-0">

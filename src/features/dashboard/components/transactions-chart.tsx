@@ -23,7 +23,7 @@ export const TransactionsChart = ({ data }: TransactionsChartProps) => {
                     <DonutChart data={data} centerLabel="Geral" />
                 </div>
 
-                <div className="mt-10 grid w-full grid-cols-3 gap-4 border-t border-[#1E293B] pt-8">
+                <div className="mt-10 grid w-full grid-cols-1 gap-4 border-t border-[#1E293B] pt-8 sm:grid-cols-3">
                     {data.map((item) => (
                         <ChartCard
                             key={item.name}
