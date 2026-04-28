@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "@/src/components/logout";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 import logoPng from "@/src/assets/Vector.png";
@@ -21,21 +21,41 @@ export const Sidebar = () => {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(true);
 
+  // Fecha a sidebar automaticamente ao mudar de rota em telas menores
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsCollapsed(true);
+      }
+    };
+    handleResize(); // Executa ao montar
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [pathname]);
+
   return (
     <>
-      {/* Espaçador para empurrar o conteúdo quando a sidebar estiver visível (apenas a largura da barra colapsada) */}
-      <div className="w-[80px] shrink-0" />
+      {/* 
+          ESPAÇADOR (Desktop apenas): 
+          Ele empurra o conteúdo apenas em telas grandes (md+). 
+          No mobile, a sidebar flutua, então o espaçador tem apenas a largura da barra fechada.
+      */}
+      <div 
+        className={`shrink-0 transition-all duration-500 ease-in-out ${
+          isCollapsed ? "w-16 md:w-[80px]" : "w-16 md:w-[280px]"
+        }`} 
+      />
 
       <aside
         className={`fixed left-0 top-0 z-50 flex h-full flex-col border-r border-white/10 font-sans transition-all duration-500 ease-in-out ${
           isCollapsed 
-            ? "w-[80px] bg-[#0F111A]" 
-            : "w-[280px] bg-[#161B26]/80 backdrop-blur-xl shadow-2xl shadow-black/50"
+            ? "w-16 md:w-[80px] bg-[#0F111A]" 
+            : "w-[280px] bg-[#161B26]/95 backdrop-blur-xl shadow-2xl shadow-black/50"
         }`}
         aria-label="Menu lateral"
       >
-        {/* Header: Logo sempre visível */}
-        <div className="flex flex-col gap-4 px-6 py-6">
+        {/* Header: Logo */}
+        <div className="flex flex-col gap-4 px-3 md:px-6 py-6">
           <div className={`flex items-center gap-3 ${isCollapsed ? "justify-center" : ""}`}>
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-(--color-primary) shadow-lg shadow-violet-500/20">
               <Image
@@ -53,7 +73,7 @@ export const Sidebar = () => {
             )}
           </div>
 
-          {/* Botão de alternar discreto abaixo da logo */}
+          {/* Botão de alternar */}
           <div className={`flex ${isCollapsed ? "justify-center" : "justify-start pl-1"}`}>
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
@@ -65,9 +85,9 @@ export const Sidebar = () => {
           </div>
         </div>
 
-        {/* Nav: ícones e labels */}
+        {/* Nav: Ícones sempre visíveis e clicáveis */}
         <nav
-          className="flex flex-1 flex-col gap-2 px-4 py-4"
+          className="flex flex-1 flex-col gap-2 px-2 md:px-4 py-4"
           aria-label="Navegação principal"
         >
           {navItems.map(({ href, label, icon }) => {
@@ -78,6 +98,9 @@ export const Sidebar = () => {
               <Link
                 key={href}
                 href={href}
+                onClick={() => {
+                   if (window.innerWidth < 768) setIsCollapsed(true);
+                }}
                 className={`flex items-center gap-3 self-stretch rounded-xl px-4 py-3 text-base font-medium leading-normal transition-all ${
                   isActive
                     ? "bg-[#8B5CF6] text-white shadow-lg shadow-violet-500/25"
@@ -99,7 +122,7 @@ export const Sidebar = () => {
         </nav>
 
         {/* Footer: Sair */}
-        <div className={`border-t border-white/5 py-6 ${isCollapsed ? "px-2" : "px-4"}`}>
+        <div className={`border-t border-white/5 py-6 ${isCollapsed ? "px-1 md:px-2" : "px-4"}`}>
           <LogoutButton
             className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-base font-medium text-zinc-400 transition-all hover:bg-red-500/10 hover:text-red-400 ${isCollapsed ? "justify-center" : ""}`}
           >
@@ -115,13 +138,14 @@ export const Sidebar = () => {
         </div>
       </aside>
 
-      {/* Overlay para fechar ao clicar fora (opcional, mas recomendado para mobile/sobreposição) */}
+      {/* Overlay (MOBILE APENAS): Escurece o fundo e permite fechar ao clicar fora */}
       {!isCollapsed && (
         <div 
-          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[2px]" 
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] md:hidden" 
           onClick={() => setIsCollapsed(true)}
         />
       )}
     </>
   );
 };
+
