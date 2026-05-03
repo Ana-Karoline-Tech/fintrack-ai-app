@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { Loader2Icon, X } from 'lucide-react'
+import { Eye, Loader2Icon, X } from 'lucide-react'
 import {
     Dialog,
     DialogClose,
@@ -21,6 +21,12 @@ import { deleteTransaction } from '../actions/delete-transaction'
 import { upsertTransaction } from '../actions/upsert-transaction'
 import { upsertTransactionSchema, type UpsertTransactionData } from '../schemas'
 import { TransactionFormFields } from './transaction-form-fields'
+import {
+    formatTransactionBRL,
+    getTransactionCategoryLabel,
+    getTransactionPaymentMethodLabel,
+} from '../utils/format'
+import { TRANSACTION_TYPE_LABELS } from '../constants'
 
 export interface TransactionRowActionData {
     id: string
@@ -31,6 +37,12 @@ export interface TransactionRowActionData {
     paymentMethod: TransactionPaymentMethod
     date: string
 }
+
+const typeBadgeStyles = {
+    DEPOSIT: 'bg-[rgba(0,188,125,0.2)] text-[#00D492]',
+    EXPENSE: 'bg-[rgba(251,44,54,0.2)] text-[#FF6467]',
+    INVESTMENT: 'bg-[rgba(43,127,255,0.2)] text-[#51A2FF]',
+} as const
 
 function toDateInputValue(iso: string) {
     const d = new Date(iso)
@@ -121,9 +133,12 @@ interface TransactionRowActionsProps {
     transaction: TransactionRowActionData
 }
 
-export function TransactionRowActions({ transaction }: TransactionRowActionsProps) {
+export function TransactionRowActions({
+    transaction,
+}: TransactionRowActionsProps) {
     const router = useRouter()
     const [editOpen, setEditOpen] = useState(false)
+    const [viewOpen, setViewOpen] = useState(false)
     const [isDeleting, startDeleteTransition] = useTransition()
 
     const {
@@ -183,6 +198,14 @@ export function TransactionRowActions({ transaction }: TransactionRowActionsProp
             <div className="flex items-center gap-1 pl-4">
                 <button
                     type="button"
+                    onClick={() => setViewOpen(true)}
+                    className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-[#90A1B9] transition hover:bg-white/10 hover:text-[#CBD5E1]"
+                    aria-label="Visualizar transação"
+                >
+                    <Eye size={18} />
+                </button>
+                <button
+                    type="button"
                     onClick={() => setEditOpen(true)}
                     className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-[#90A1B9] transition hover:bg-white/10 hover:text-[#CBD5E1]"
                     aria-label="Editar transação"
@@ -204,6 +227,69 @@ export function TransactionRowActions({ transaction }: TransactionRowActionsProp
                 </button>
             </div>
 
+            {/* Modal de Detalhes */}
+            <Dialog open={viewOpen} onOpenChange={setViewOpen}>
+                <DialogContent
+                    showCloseButton={false}
+                    className="w-[420px] max-w-[calc(100%-2rem)] gap-0 overflow-hidden rounded-[24px] border border-[#334155] bg-[#1E293B] p-0 font-sans text-white ring-0"
+                >
+                    <DialogHeader className="flex-row items-center justify-between border-b border-[#334155] px-6 py-5">
+                        <DialogTitle className="text-[18px] font-semibold leading-7 tracking-normal text-[#F1F5F9]">
+                            Detalhes da transação
+                        </DialogTitle>
+                        <DialogClose asChild>
+                            <button
+                                type="button"
+                                className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-[#94A3B8] transition hover:bg-[#334155] hover:text-[#F1F5F9]"
+                                aria-label="Fechar modal"
+                            >
+                                <X size={20} />
+                            </button>
+                        </DialogClose>
+                    </DialogHeader>
+
+                    <div className="space-y-4 px-6 py-5">
+                        <DetailItem label="Título" value={transaction.name} />
+                        <DetailItem
+                            label="Valor"
+                            value={formatTransactionBRL(transaction.amount)}
+                        />
+                        <DetailItem
+                            label="Tipo"
+                            value={TRANSACTION_TYPE_LABELS[transaction.type]}
+                            isBadge
+                            type={transaction.type}
+                        />
+                        <DetailItem
+                            label="Categoria"
+                            value={getTransactionCategoryLabel(transaction.category)}
+                        />
+                        <DetailItem
+                            label="Método"
+                            value={getTransactionPaymentMethodLabel(
+                                transaction.paymentMethod
+                            )}
+                        />
+                        <DetailItem
+                            label="Data"
+                            value={new Date(transaction.date).toLocaleDateString('pt-BR')}
+                        />
+
+                        <div className="pt-2">
+                            <DialogClose asChild>
+                                <button
+                                    type="button"
+                                    className="h-[44px] w-full cursor-pointer rounded-xl bg-[#9333EA] text-[16px] font-semibold text-white shadow-[0px_4px_6px_-4px_rgba(168,85,247,0.2),0px_10px_15px_-3px_rgba(168,85,247,0.2)] transition hover:bg-[#7c2dd2]"
+                                >
+                                    Fechar
+                                </button>
+                            </DialogClose>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Modal de Edição */}
             <Dialog open={editOpen} onOpenChange={setEditOpen}>
                 <DialogContent
                     showCloseButton={false}
@@ -259,6 +345,35 @@ export function TransactionRowActions({ transaction }: TransactionRowActionsProp
                     </form>
                 </DialogContent>
             </Dialog>
+        </div>
+    )
+}
+
+function DetailItem({
+    label,
+    value,
+    isBadge,
+    type,
+}: {
+    label: string
+    value: string
+    isBadge?: boolean
+    type?: TransactionType
+}) {
+    return (
+        <div className="flex flex-col gap-1 border-b border-[#334155]/50 pb-3 last:border-0 last:pb-0">
+            <span className="text-xs font-medium uppercase tracking-wider text-[#94A3B8]">
+                {label}
+            </span>
+            {isBadge && type ? (
+                <span
+                    className={`w-fit rounded-full px-2.5 py-0.5 text-xs font-medium leading-4 ${typeBadgeStyles[type]}`}
+                >
+                    {value}
+                </span>
+            ) : (
+                <span className="text-sm font-medium text-[#F1F5F9]">{value}</span>
+            )}
         </div>
     )
 }
